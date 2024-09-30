@@ -1,13 +1,13 @@
-package com.ukma.booksocialnetwork;
+package com.ukma.main.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BookSocialNetworkApplicationTests {
+class MainServiceApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }
