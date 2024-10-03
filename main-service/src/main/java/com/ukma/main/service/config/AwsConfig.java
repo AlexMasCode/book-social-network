@@ -10,17 +10,17 @@ import software.amazon.awssdk.services.s3.S3Client;
 @Configuration
 public class AwsConfig {
 
-    @Bean
-    public S3Client s3Client() {
-        AwsBasicCredentials credentials = AwsBasicCredentials.create(
-                "",
-                ""
-        );
-
-        return S3Client.builder()
-                .region(Region.EU_NORTH_1)
-                .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                .build();
-    }
+   // @Bean
+   // public S3Client s3Client() {
+   //    // AwsBasicCredentials credentials = AwsBasicCredentials.create(
+   //    //         "",
+   //    //         ""
+   //    // );
+//
+   //     return S3Client.builder()
+   //             .region(Region.EU_NORTH_1)
+   //             .credentialsProvider(StaticCredentialsProvider.create(credentials))
+   //             .build();
+   // }
 }
 
