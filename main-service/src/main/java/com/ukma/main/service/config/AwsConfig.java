@@ -13,8 +13,8 @@ public class AwsConfig {
     @Bean
     public S3Client s3Client() {
         AwsBasicCredentials credentials = AwsBasicCredentials.create(
-                "AKIA4DKE7M7JUEKKXHMT",
-                "DbN9THLMy1Hy0Shw1FX7IxU+7tZ6+3S/veM6Ns9+"
+                "",
+                ""
         );
 
         return S3Client.builder()
