@@ -1,0 +1,48 @@
+services:
+  eureka-server:
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: ./eureka-server/target/eureka-server-0.0.1-SNAPSHOT.jar
+    environment:
+      EUREKA_SERVER_URL: http://eureka-server/eureka
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider localhost:8761/actuator/health || exit 1
+      interval: 20s
+      retries: 5
+      start_period: 5s
+      timeout: 20s
+    ports:
+      - "8761:8761"
+  api-gateway:
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: ./api-gateway/target/api-gateway-0.0.1-SNAPSHOT.jar
+    environment:
+      EUREKA_SERVER_URL: http://eureka-server/eureka
+    ports:
+      - "8080:8080"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+  main-service:
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: ./main-service/target/main-service-0.0.1-SNAPSHOT.jar
+    environment:
+      EUREKA_SERVER_URL: http://eureka-server/eureka
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+  authentication-service:
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: ./authentication-service/target/authentication-service-0.0.1-SNAPSHOT.jar
+    environment:
+      EUREKA_SERVER_URL: http://eureka-server/eureka
+    depends_on:
+      eureka-server:
+        condition: service_healthy
