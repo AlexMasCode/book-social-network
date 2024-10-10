@@ -11,7 +11,7 @@ public class GatewayConfig {
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
             .route(p -> p.path("/api/users/**", "/api/auth/**").uri("lb://authentication-service"))
-            .route(p -> p.path("/api/books/**").uri("lb://main-service"))
+            .route(p -> p.path("/api/books/**", "/api/comments/**", "/api/comment-complaints/**").uri("lb://main-service"))
             .build();
     }
 }

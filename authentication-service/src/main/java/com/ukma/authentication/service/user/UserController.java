@@ -5,9 +5,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +17,7 @@ import java.util.List;
 public class UserController {
 
     UserService userService;
+    JmsTemplate jmsTemplate;
 
     @GetMapping
     public ResponseEntity<List<UserDto>> findAll() {
@@ -28,5 +28,12 @@ public class UserController {
         } catch (Exception exception) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable String id){
+        userService.delete(id);
+
+        jmsTemplate.convertAndSend("user.deletion", id);
     }
 }

@@ -22,7 +22,7 @@ public class KeyProvider {
 
     public KeyProvider() throws Exception {
         this.KEY_FACTORY = KeyFactory.getInstance("RSA");
-        this.PUBLIC_KEY = loadPublicKey("src/main/resources/keys/public_key.pem");
+        this.PUBLIC_KEY = loadPublicKey("main-service/src/main/resources/keys/public_key.pem");
     }
 
     private PublicKey loadPublicKey(String path) throws Exception {

@@ -25,9 +25,9 @@ public class Comment {
 
     private String content;
 
-    private Long userId;
+    private String userId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 

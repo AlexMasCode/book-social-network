@@ -4,6 +4,7 @@ package com.ukma.main.service.comments;
 import com.ukma.main.service.book.Book;
 import com.ukma.main.service.book.BookRepository;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public class CommentService {
         commentRepository.save(commentToUpdate);
     }
 
+    @JmsListener(destination = "comment.complaint", selector = "status = 'APPROVED'")
     public void deleteOne(Long id) {
         commentRepository.deleteById(id);
     }
@@ -69,13 +71,19 @@ public class CommentService {
             );
         }
 
-        if (commentDto.bookId() != null) {
-            specs.add(
-                (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("bookId"), commentDto.bookId())
-            );
-        }
+//        if (commentDto.bookId() != null) {
+//            specs.add(
+//                (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("bookId"), commentDto.bookId())
+//            );
+//        }
 
         return Specification.allOf(specs);
+    }
+
+    @JmsListener(destination = "user.deletion", containerFactory = "pubSubFactory")
+    public void deleteAllByUserId(String userId){
+        System.out.println("Comment deleted");
+        commentRepository.deleteAllByUserId(userId);
     }
 
 }

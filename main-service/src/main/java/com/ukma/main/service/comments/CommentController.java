@@ -31,8 +31,8 @@ public class CommentController {
     }
 
     @GetMapping
-    public List<Comment> getAll(@RequestBody(required = false) CommentDto commentDto) {
-        return commentService.getAll(commentDto);
+    public ResponseEntity<List<Comment>> getAll(@RequestBody(required = false) CommentDto commentDto) {
+        return ResponseEntity.ok(commentService.getAll(commentDto));
     }
 
     @GetMapping("/{id}")

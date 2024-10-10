@@ -1,4 +1,12 @@
 services:
+  artemis-broker:
+    image: apache/activemq-artemis
+
+    ports:
+      - "61616:61616"
+    environment:
+      ARTEMIS_USERNAME: admin
+      ARTEMIS_PASSWORD: admin
   eureka-server:
     build:
       dockerfile: Dockerfile

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -24,8 +25,8 @@ public class KeyProvider {
 
     public KeyProvider() throws Exception {
         this.KEY_FACTORY = KeyFactory.getInstance("RSA");
-        this.PRIVATE_KEY = loadPrivateKey("src/main/resources/keys/private_key.pem");
-        this.PUBLIC_KEY = loadPublicKey("src/main/resources/keys/public_key.pem");
+        this.PRIVATE_KEY = loadPrivateKey("authentication-service/src/main/resources/keys/private_key.pem");
+        this.PUBLIC_KEY = loadPublicKey("authentication-service/src/main/resources/keys/public_key.pem");
     }
 
     private PrivateKey loadPrivateKey(String path) throws Exception {

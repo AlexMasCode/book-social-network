@@ -5,6 +5,7 @@ import com.ukma.main.service.user.UserDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -43,6 +44,13 @@ public class BookService {
             .filter(user -> user.getId().equals(authorId))
             .findFirst()
             .orElse(null);
+    }
+
+
+    @JmsListener(destination = "user.deletion", containerFactory = "pubSubFactory")
+    public void deleteAllByAuthorId(String authorId){
+        System.out.println("Deleted book");
+        bookRepository.deleteAllByAuthorId(authorId);
     }
 
 }
