@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -43,6 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class AuthenticationServiceApplicationTests {
 
     @Autowired
@@ -71,7 +73,7 @@ class AuthenticationServiceApplicationTests {
     }
 
     @Test
-    public void testThatRegistrationWithCorrectDataIsSuccessful() throws Exception {
+    public void registrationWithCorrectDataIsSuccessful() throws Exception {
         AuthDto authDto = new AuthDto("Vova", "vova123");
 
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
@@ -122,7 +124,6 @@ class AuthenticationServiceApplicationTests {
             .andExpect(jsonPath("$.token").isNotEmpty())
             .andExpect(jsonPath("$.token").isString());
 
-        //String jwt = objectMapper.readTree(mvcResult.getResponse().getContentAsString()).get("token").asText();
 
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(new User(authDto.getUsername(), authDto.getPassword())));
         when(passwordEncoder.matches(any(String.class), any(String.class))).thenReturn(true);
@@ -211,10 +212,10 @@ class AuthenticationServiceApplicationTests {
             .andExpect(jsonPath("$.token").isString())
             .andReturn();
 
-        String jwt = objectMapper.readTree(mvcResult.getResponse().getContentAsString()).get("token").asText();
 
         List<User> expectedUserMockList = List.of(new User(), new User());
         when(userRepository.findAll()).thenReturn(expectedUserMockList);
+        
         //accessing authenticated resource
         mockMvc.perform(
             get("/api/users")

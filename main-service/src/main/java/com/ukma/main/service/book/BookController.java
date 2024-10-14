@@ -1,7 +1,6 @@
 package com.ukma.main.service.book;
 
 import com.ukma.main.service.aws.S3Service;
-import com.ukma.main.service.user.UserClient;
 import com.ukma.main.service.user.UserDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
