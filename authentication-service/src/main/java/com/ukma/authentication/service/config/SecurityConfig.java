@@ -24,6 +24,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(requests ->
                 requests
+                    .requestMatchers("/health").permitAll()
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/users/**").authenticated()
             ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

@@ -1,56 +1,82 @@
 services:
-  artemis-broker:
-    image: apache/activemq-artemis
-
-    ports:
-      - "61616:61616"
-    environment:
-      ARTEMIS_USERNAME: admin
-      ARTEMIS_PASSWORD: admin
   eureka-server:
+    container_name: book-eureka-server
     build:
       dockerfile: Dockerfile
       args:
-        JAR_FILE: ./eureka-server/target/eureka-server-0.0.1-SNAPSHOT.jar
+        JAR_FILE: ${EUREKA_SERVER_JAR}
     environment:
-      EUREKA_SERVER_URL: http://eureka-server/eureka
+      EUREKA_SERVER_URL: http://eureka-server:8761/eureka
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider localhost:8761/actuator/health || exit 1
-      interval: 20s
+      test: "wget -T5 -qO- http://localhost:8761/health | grep UP || exit 1"
+      interval: 10s
+      retries: 4
+      start_period: 5s
+      timeout: 10s
+    ports:
+      - '8761:8761'
+
+  artemis-broker:
+    container_name: book-artemis-broker
+    image: apache/activemq-artemis:latest
+    ports:
+      - '61616:61616'
+      - '8161:8161'
+    environment:
+      ARTEMIS_USERNAME: artemis
+      ARTEMIS_PASSWORD: artemis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8161/console"]
+      interval: 10s
       retries: 5
       start_period: 5s
-      timeout: 20s
-    ports:
-      - "8761:8761"
+      timeout: 10s
+
   api-gateway:
+    container_name: book-api-gateway
     build:
       dockerfile: Dockerfile
       args:
-        JAR_FILE: ./api-gateway/target/api-gateway-0.0.1-SNAPSHOT.jar
+        JAR_FILE: ${API_GATEWAY_JAR}
     environment:
-      EUREKA_SERVER_URL: http://eureka-server/eureka
+      EUREKA_SERVER_URL: http://eureka-server:8761/eureka
     ports:
-      - "8080:8080"
+      - '8080:8080'
+    healthcheck:
+      test: "wget -T5 -qO- http://localhost:8080/health | grep UP || exit 1"
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 10s
     depends_on:
       eureka-server:
         condition: service_healthy
+
   main-service:
+    container_name: book-main-service
     build:
       dockerfile: Dockerfile
       args:
-        JAR_FILE: ./main-service/target/main-service-0.0.1-SNAPSHOT.jar
+        JAR_FILE: ${MAIN_SERVICE_JAR}
     environment:
-      EUREKA_SERVER_URL: http://eureka-server/eureka
+      EUREKA_SERVER_URL: http://eureka-server:8761/eureka
+      ARTEMIS_URL: tcp://artemis-broker:61616
     depends_on:
-      eureka-server:
+      api-gateway:
         condition: service_healthy
+      artemis-broker:
+        condition: service_healthy
+
   authentication-service:
+    container_name: book-authentication-service
     build:
       dockerfile: Dockerfile
       args:
-        JAR_FILE: ./authentication-service/target/authentication-service-0.0.1-SNAPSHOT.jar
+        JAR_FILE: ${AUTHENTICATION_SERVICE_JAR}
     environment:
-      EUREKA_SERVER_URL: http://eureka-server/eureka
+      EUREKA_SERVER_URL: http://eureka-server:8761/eureka
     depends_on:
-      eureka-server:
+      api-gateway:
+        condition: service_healthy
+      artemis-broker:
         condition: service_healthy

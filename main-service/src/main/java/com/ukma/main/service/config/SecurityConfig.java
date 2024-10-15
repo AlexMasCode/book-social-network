@@ -26,7 +26,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests ->
             requests
-                .requestMatchers("/healthcheck").permitAll()
+                .requestMatchers("/health").permitAll()
                 .requestMatchers("/api/**").permitAll()
             )
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

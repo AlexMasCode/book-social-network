@@ -17,3 +17,5 @@ management:
     jmx:
       exposure:
         include: health
+    web:
+      base-path: /
