@@ -1,0 +1,23 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'eureka-server'
+    metrics_path: '/prometheus'
+    static_configs:
+      - targets: ['eureka-server:8761']
+
+  - job_name: 'api-gateway'
+    metrics_path: '/prometheus'
+    static_configs:
+      - targets: ['api-gateway:8080']
+
+  - job_name: 'main-service'
+    metrics_path: '/main-service/prometheus'
+    static_configs:
+      - targets: ['api-gateway:8080']
+
+  - job_name: 'authentication-service'
+    metrics_path: '/authentication-service/prometheus'
+    static_configs:
+      - targets: ['api-gateway:8080']

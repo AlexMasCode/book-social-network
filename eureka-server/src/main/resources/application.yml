@@ -23,3 +23,12 @@ management:
         include: health
     web:
       base-path: /
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    prometheus:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true

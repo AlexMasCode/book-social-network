@@ -12,10 +12,6 @@ eureka:
     enabled: true
 
 management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
     jmx:
       exposure:
         include: "health"

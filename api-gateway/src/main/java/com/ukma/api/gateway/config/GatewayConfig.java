@@ -10,8 +10,16 @@ public class GatewayConfig {
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-            .route(p -> p.path("/api/users/**", "/api/auth/**").uri("lb://authentication-service"))
-            .route(p -> p.path("/api/books/**", "/api/comments/**", "/api/comment-complaints/**").uri("lb://main-service"))
-            .build();
+                .route(p -> p.path("/api/users/**", "/api/auth/**")
+                        .uri("lb://authentication-service"))
+                .route(p -> p.path("/api/books/**", "/api/comments/**", "/api/comment-complaints/**")
+                        .uri("lb://main-service"))
+                .route(p -> p.path("/actuator/auth-metrics/**")
+                        .filters(f -> f.rewritePath("/authentication-service/(?<remaining>.*)", "/prometheus/${remaining}"))
+                        .uri("lb://authentication-service"))
+                .route(p -> p.path("/actuator/main-metrics/**")
+                        .filters(f -> f.rewritePath("/main-service/(?<remaining>.*)", "/prometheus/${remaining}"))
+                        .uri("lb://main-service"))
+                .build();
     }
 }

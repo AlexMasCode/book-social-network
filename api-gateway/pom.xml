@@ -46,6 +46,10 @@
             <artifactId>spring-boot-admin-starter-client</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
