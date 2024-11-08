@@ -79,7 +79,6 @@ class MainServiceApplicationTests {
         );
 
         when(bookService.save(any(Book.class))).thenReturn(book);
-        when(bookService.getAuthor(any(String.class))).thenReturn(new UserDto("2ff", "Vova"));
 
         mockMvc.perform(
                 post("/api/books")

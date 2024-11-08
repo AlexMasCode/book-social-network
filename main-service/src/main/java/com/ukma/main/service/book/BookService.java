@@ -10,6 +10,7 @@ import io.grpc.stub.StreamObserver;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Slf4j
 public class BookService {
 
     BookRepository bookRepository;
@@ -32,7 +34,7 @@ public class BookService {
     UserServiceGrpc.UserServiceBlockingStub userServiceBlockingStub;
 
     public Book save(Book book) {
-        if (getAuthor(book.getAuthorId()) == null) {
+        if (getAuthorViaGrpc(book.getAuthorId()) == null) {
             throw new NoSuchElementException("author with such id does not exist");
         }
         return bookRepository.save(book);
@@ -51,7 +53,7 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public UserDto getAuthor(String authorId) {
+    public UserDto getAuthorByFeignClient(String authorId) {
         return this.userClient.findAll().stream()
             .filter(user -> user.getId().equals(authorId))
             .findFirst()
@@ -84,7 +86,5 @@ public class BookService {
         userServiceBlockingStub.getAllUsers(request).forEachRemaining(user -> users.add(new UserDto(user.getId(), user.getUsername())));
         return users;
     }
-
-
 
 }

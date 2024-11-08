@@ -1,10 +1,12 @@
 package com.ukma.main.service.book;
 
 import com.ukma.main.service.aws.S3Service;
+import com.ukma.main.service.dto.ExceptionDto;
 import com.ukma.main.service.user.UserDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,17 +33,20 @@ import java.util.UUID;
 @RequestMapping("/api/books")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Slf4j
 public class BookController {
 
     S3Service s3Service;
     BookService bookService;
 
     @PostMapping("")
-    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+    public ResponseEntity<?> createBook(@RequestBody Book book) {
         try {
+            log.info("start a process of a book creation");
             return ResponseEntity.status(HttpStatus.CREATED).body(bookService.save(book));
         } catch (Exception exception) {
-            return ResponseEntity.badRequest().build();
+            log.error("Error occurred during a process of a book creation: {}", exception.getMessage());
+            return ResponseEntity.badRequest().body(new ExceptionDto(exception.getMessage()));
         }
     }
 
@@ -64,7 +69,7 @@ public class BookController {
     @GetMapping("/{bookId}/author")
     public ResponseEntity<UserDto> getBookAuthor(@PathVariable Long bookId) {
         Book book = bookService.getBook(bookId).orElseThrow(() -> new NoSuchElementException("book with id " + bookId + " does not exist"));
-        UserDto userDto = bookService.getAuthor(book.getAuthorId());
+        UserDto userDto = bookService.getAuthorViaGrpc(book.getAuthorId());
         if (userDto == null) {
             return ResponseEntity.notFound().build();
         }

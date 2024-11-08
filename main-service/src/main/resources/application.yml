@@ -42,4 +42,8 @@ management:
     metrics:
       export:
         enabled: true
-
+grpc:
+  client:
+    authentication-service:
+      negotiationType: PLAINTEXT
+      address: discovery:///authentication-service

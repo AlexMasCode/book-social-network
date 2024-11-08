@@ -6,6 +6,8 @@ import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.NoSuchElementException;
+
 @GrpcService
 public class UserServiceImpl extends UserServiceGrpc.UserServiceImplBase {
 
@@ -15,13 +17,17 @@ public class UserServiceImpl extends UserServiceGrpc.UserServiceImplBase {
     @Override
     public void getUserById(GetUserRequest request, StreamObserver<UserResponse> responseObserver) {
         String userId = request.getUserId();
-        userRepository.findById(userId).ifPresent(user -> {
+        userRepository.findById(userId).ifPresentOrElse(user -> {
             UserResponse response = UserResponse.newBuilder()
                     .setId(user.getId())
                     .setUsername(user.getUsername())
                     .build();
             responseObserver.onNext(response);
-        });
+        },
+            () -> {
+                throw new NoSuchElementException("User is not found");
+            }
+        );
         responseObserver.onCompleted();
     }
 

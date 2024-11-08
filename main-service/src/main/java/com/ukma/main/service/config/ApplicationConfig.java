@@ -1,14 +1,27 @@
 package com.ukma.main.service.config;
 
 import com.ukma.main.service.auth.CustomAuthenticationProvider;
+import com.ukma.main.service.protobuf.UserServiceGrpc;
+import io.grpc.CallCredentials;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import net.devh.boot.grpc.client.security.CallCredentialsHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 @Configuration
 public class ApplicationConfig {
+
+    @Autowired
+    DiscoveryClient discoveryClient;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -18,5 +31,25 @@ public class ApplicationConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         return new CustomAuthenticationProvider();
+    }
+
+    @Bean
+    public ManagedChannel managedChannel() {
+        String authenticationServiceName = "authentication-service";
+        ServiceInstance address = discoveryClient.getInstances(authenticationServiceName)
+            .stream()
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Service not found: " + authenticationServiceName));
+        return ManagedChannelBuilder.forAddress(address.getHost(), address.getPort()).usePlaintext().build();
+    }
+
+   @Bean
+   public UserServiceGrpc.UserServiceBlockingStub userServiceBlockingStub(ManagedChannel channel) {
+       return UserServiceGrpc.newBlockingStub(channel);
+   }
+
+    @Bean
+    public CallCredentials bearerAuthForwardingCredentials() {
+        return CallCredentialsHelper.bearerAuth(() -> ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken().getTokenValue());
     }
 }

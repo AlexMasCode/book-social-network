@@ -1,6 +1,7 @@
 package com.ukma.authentication.service.config;
 
 import com.ukma.authentication.service.auth.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

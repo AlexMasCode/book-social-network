@@ -10,9 +10,9 @@ services:
       SPRING_BOOT_ADMIN_URL: http://admin-server:8082
     healthcheck:
       test: "wget -T5 -qO- http://localhost:8761/health | grep UP || exit 1"
-      interval: 10s
-      retries: 4
-      start_period: 5s
+      interval: 30s
+      retries: 8
+      start_period: 30s
       timeout: 10s
     ports:
       - '8761:8761'
@@ -29,9 +29,9 @@ services:
       ARTEMIS_CREATE_ARGS: "--force"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8161/console" ]
-      interval: 10s
-      retries: 5
-      start_period: 5s
+      interval: 30s
+      retries: 8
+      start_period: 30s
       timeout: 10s
 
   api-gateway:
@@ -46,10 +46,10 @@ services:
     ports:
       - '8080:8080'
     healthcheck:
-      test: "wget -T5 -qO- http://localhost:8080/health | grep UP || exit 1"
-      interval: 10s
-      retries: 5
-      start_period: 5s
+      test: "wget -T5 -qO- http://localhost/health | grep UP || exit 1"
+      interval: 30s
+      retries: 8
+      start_period: 30s
       timeout: 10s
     depends_on:
       eureka-server:
@@ -66,8 +66,8 @@ services:
       ARTEMIS_URL: tcp://artemis-broker:61616
       SPRING_BOOT_ADMIN_URL: http://admin-server:8082
     depends_on:
-      api-gateway:
-        condition: service_healthy
+      authentication-service:
+        condition: service_started
       artemis-broker:
         condition: service_healthy
 
@@ -86,6 +86,12 @@ services:
         condition: service_healthy
       artemis-broker:
         condition: service_healthy
+    healthcheck:
+      test: "curl -f http://localhost/health"
+      interval: 30s
+      retries: 8
+      start_period: 30s
+      timeout: 10s
 
   admin-server:
     container_name: book-admin-server
@@ -103,9 +109,9 @@ services:
         condition: service_healthy
     healthcheck:
       test: "wget -T5 -qO- http://localhost:8082/health | grep UP || exit 1"
-      interval: 10s
-      retries: 5
-      start_period: 5s
+      interval: 30s
+      retries: 8
+      start_period: 30s
       timeout: 10s
 
   prometheus:
