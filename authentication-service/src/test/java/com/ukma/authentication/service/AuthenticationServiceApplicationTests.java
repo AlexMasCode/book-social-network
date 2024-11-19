@@ -2,11 +2,8 @@ package com.ukma.authentication.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ukma.authentication.service.auth.AuthenticationController;
-import com.ukma.authentication.service.auth.JwtService;
 import com.ukma.authentication.service.auth.dto.AuthDto;
 import com.ukma.authentication.service.user.User;
-import com.ukma.authentication.service.user.UserController;
 import com.ukma.authentication.service.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -32,7 +27,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -77,7 +71,7 @@ class AuthenticationServiceApplicationTests {
         AuthDto authDto = new AuthDto("Vova", "vova123");
 
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
-        when(userRepository.save(any(User.class))).thenReturn(new User(authDto.getUsername(), authDto.getPassword()));
+        when(userRepository.save(any(User.class))).thenReturn(new User(authDto.getEmail(), authDto.getPassword()));
 
         mockMvc.perform(
                 post("/api/auth/register")
@@ -96,7 +90,7 @@ class AuthenticationServiceApplicationTests {
     public void testThatRegistrationIsFailedIfUserWithSuchUsernameAlreadyExists() throws Exception {
         AuthDto authDto = new AuthDto("Vova", "vova123");
 
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(new User(authDto.getUsername(), authDto.getPassword())));
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(new User(authDto.getEmail(), authDto.getPassword())));
 
         mockMvc.perform(
                 post("/api/auth/register")
@@ -113,7 +107,7 @@ class AuthenticationServiceApplicationTests {
         AuthDto authDto = new AuthDto("Vova", "vova123");
 
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
-        when(userRepository.save(any(User.class))).thenReturn(new User(authDto.getUsername(), authDto.getPassword()));
+        when(userRepository.save(any(User.class))).thenReturn(new User(authDto.getEmail(), authDto.getPassword()));
 
         mockMvc.perform(
                 post("/api/auth/register")
@@ -125,7 +119,7 @@ class AuthenticationServiceApplicationTests {
             .andExpect(jsonPath("$.token").isString());
 
 
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(new User(authDto.getUsername(), authDto.getPassword())));
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(new User(authDto.getEmail(), authDto.getPassword())));
         when(passwordEncoder.matches(any(String.class), any(String.class))).thenReturn(true);
 
         mockMvc.perform(
@@ -178,7 +172,7 @@ class AuthenticationServiceApplicationTests {
 
         List<User> expectedUserMockList = List.of(new User(), new User());
         when(userRepository.findAll()).thenReturn(expectedUserMockList);
-        when(userDetailsService.loadUserByUsername(any(String.class))).thenReturn(new User(authDto.getUsername(), authDto.getPassword()));
+        when(userDetailsService.loadUserByUsername(any(String.class))).thenReturn(new User(authDto.getEmail(), authDto.getPassword()));
 
         //accessing authenticated resource
         MvcResult mvcGetResult = mockMvc.perform(

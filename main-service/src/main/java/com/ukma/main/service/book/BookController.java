@@ -37,7 +37,7 @@ import java.util.UUID;
 public class BookController {
 
     S3Service s3Service;
-    BookService bookService;
+    BookServiceImpl bookService;
 
     @PostMapping("")
     public ResponseEntity<?> createBook(@RequestBody Book book) {
