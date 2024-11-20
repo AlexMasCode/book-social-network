@@ -22,16 +22,14 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserDto>> findAll() {
         try {
-            return ResponseEntity.ok(userService.findAll().stream()
-                .map(user -> new UserDto(user.getId(), user.getUsername()))
-                .toList());
+            return ResponseEntity.ok(userService.findAll());
         } catch (Exception exception) {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable String id){
+    public void deleteUser(@PathVariable String id) {
         userService.delete(id);
 
         jmsTemplate.convertAndSend("user.deletion", id);

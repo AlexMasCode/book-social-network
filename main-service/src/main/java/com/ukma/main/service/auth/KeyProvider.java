@@ -4,44 +4,41 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Getter
 public class KeyProvider {
 
-    Environment env;
     ResourceLoader resourceLoader;
-    final PublicKey PUBLIC_KEY;
-    final KeyFactory KEY_FACTORY;
+    PublicKey publicKey;
+    KeyFactory keyFactory;
 
     @Autowired
-    public KeyProvider(Environment env, ResourceLoader resourceLoader) throws Exception {
+    public KeyProvider(ResourceLoader resourceLoader) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         this.resourceLoader = resourceLoader;
-        this.env = env;
-        this.KEY_FACTORY = KeyFactory.getInstance("RSA");
-        this.PUBLIC_KEY = loadPublicKey();
+        this.keyFactory = KeyFactory.getInstance("RSA");
+        this.publicKey = loadPublicKey();
     }
 
-    private PublicKey loadPublicKey() throws Exception {
+    private PublicKey loadPublicKey() throws IOException, InvalidKeySpecException {
         Resource resource = resourceLoader.getResource("classpath:/keys/public_key.pem");
         String key = new String(resource.getContentAsByteArray())
             .replaceAll("-----\\w+ PUBLIC KEY-----", "")
             .replaceAll("\\s", "");
         byte[] keyBytes = Base64.getDecoder().decode(key);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-        return KEY_FACTORY.generatePublic(spec);
-    }
-
-    public PublicKey getPublicKey() {
-        return PUBLIC_KEY;
+        return keyFactory.generatePublic(spec);
     }
 }

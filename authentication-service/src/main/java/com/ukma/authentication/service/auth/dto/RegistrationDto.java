@@ -12,7 +12,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class AuthDto {
+public class RegistrationDto {
+
+    @NotBlank
+    String fullName;
 
     @Email
     String email;

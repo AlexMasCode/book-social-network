@@ -32,13 +32,22 @@ public class User implements UserDetails {
     String id;
 
     @Column(nullable = false, unique = true)
-    String username;
+    String email;
+
+    @Column(nullable = false)
+    String fullName;
 
     @Column(nullable = false)
     String password;
 
-    public User(String username, String password) {
-        this.username = username;
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(String email, String fullName, String password) {
+        this.email = email;
+        this.fullName = fullName;
         this.password = password;
     }
 
@@ -50,5 +59,10 @@ public class User implements UserDetails {
     @Override
     public String getPassword() {
         return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 }

@@ -2,7 +2,7 @@ package com.ukma.authentication.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ukma.authentication.service.auth.dto.AuthDto;
+import com.ukma.authentication.service.auth.dto.LoginDto;
 import com.ukma.authentication.service.user.User;
 import com.ukma.authentication.service.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,9 +68,9 @@ class AuthenticationServiceApplicationTests {
 
     @Test
     public void registrationWithCorrectDataIsSuccessful() throws Exception {
-        AuthDto authDto = new AuthDto("Vova", "vova123");
+        LoginDto authDto = new LoginDto("Vova", "vova123");
 
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenReturn(new User(authDto.getEmail(), authDto.getPassword()));
 
         mockMvc.perform(
@@ -82,15 +82,15 @@ class AuthenticationServiceApplicationTests {
             .andExpect(jsonPath("$.token").isNotEmpty())
             .andExpect(jsonPath("$.token").isString());
 
-        verify(userRepository, times(1)).findByUsername(any(String.class));
+        verify(userRepository, times(1)).findByEmail(any(String.class));
         verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
     public void testThatRegistrationIsFailedIfUserWithSuchUsernameAlreadyExists() throws Exception {
-        AuthDto authDto = new AuthDto("Vova", "vova123");
+        LoginDto authDto = new LoginDto("Vova", "vova123");
 
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(new User(authDto.getEmail(), authDto.getPassword())));
+        when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(new User(authDto.getEmail(), authDto.getPassword())));
 
         mockMvc.perform(
                 post("/api/auth/register")
@@ -99,14 +99,14 @@ class AuthenticationServiceApplicationTests {
             )
             .andExpect(status().isBadRequest());
 
-        verify(userRepository, times(1)).findByUsername(any(String.class));
+        verify(userRepository, times(1)).findByEmail(any(String.class));
     }
 
     @Test
     public void testThatLoginIsSuccessfulIfUserRegistered() throws Exception {
-        AuthDto authDto = new AuthDto("Vova", "vova123");
+        LoginDto authDto = new LoginDto("Vova", "vova123");
 
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenReturn(new User(authDto.getEmail(), authDto.getPassword()));
 
         mockMvc.perform(
@@ -119,7 +119,7 @@ class AuthenticationServiceApplicationTests {
             .andExpect(jsonPath("$.token").isString());
 
 
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(new User(authDto.getEmail(), authDto.getPassword())));
+        when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(new User(authDto.getEmail(), authDto.getPassword())));
         when(passwordEncoder.matches(any(String.class), any(String.class))).thenReturn(true);
 
         mockMvc.perform(
@@ -130,16 +130,16 @@ class AuthenticationServiceApplicationTests {
             .andExpect(status().isOk())
             .andReturn();
 
-        verify(userRepository, times(2)).findByUsername(any(String.class));
+        verify(userRepository, times(2)).findByEmail(any(String.class));
         verify(userRepository, times(1)).save(any(User.class));
         verify(passwordEncoder, times(1)).matches(any(String.class), any(String.class));
     }
 
     @Test
     public void testThatLoginIsFailedIfUserIsNotRegistered() throws Exception {
-        AuthDto authDto = new AuthDto("Vova", "vova123");
+        LoginDto authDto = new LoginDto("Vova", "vova123");
 
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.empty());
         when(passwordEncoder.matches(any(String.class), any(String.class))).thenReturn(true);
 
         mockMvc.perform(
@@ -149,14 +149,14 @@ class AuthenticationServiceApplicationTests {
             )
             .andExpect(status().isBadRequest());
 
-        verify(userRepository, times(1)).findByUsername(any(String.class));
+        verify(userRepository, times(1)).findByEmail(any(String.class));
     }
 
     @Test
     public void testThatRegisteredUserCanAccessAuthenticatedResources() throws Exception {
-        AuthDto authDto = new AuthDto("Vova", "vova123");
+        LoginDto authDto = new LoginDto("Vova", "vova123");
 
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.empty());
 
         MvcResult mvcResult = mockMvc.perform(
                 post("/api/auth/register")
@@ -187,14 +187,14 @@ class AuthenticationServiceApplicationTests {
         assertThat(actualUserMockList).isNotEmpty();
         assertThat(actualUserMockList).hasSize(expectedUserMockList.size());
 
-        verify(userRepository, times(1)).findByUsername(any(String.class));
+        verify(userRepository, times(1)).findByEmail(any(String.class));
     }
 
     @Test
     public void testThatUserCannnotAccessAuthenticatedResourcesWithoutJwt() throws Exception {
-        AuthDto authDto = new AuthDto("Vova", "vova123");
+        LoginDto authDto = new LoginDto("Vova", "vova123");
 
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.empty());
 
         MvcResult mvcResult = mockMvc.perform(
                 post("/api/auth/register")
@@ -215,14 +215,14 @@ class AuthenticationServiceApplicationTests {
             get("/api/users")
         ).andExpect(status().is4xxClientError());
 
-        verify(userRepository, times(1)).findByUsername(any(String.class));
+        verify(userRepository, times(1)).findByEmail(any(String.class));
     }
 
     @Test
     public void testThatUserCannnotAccessAuthenticatedResourcesWithIncorrectJwt() throws Exception {
-        AuthDto authDto = new AuthDto("Vova", "vova123");
+        LoginDto authDto = new LoginDto("Vova", "vova123");
 
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.empty());
 
         MvcResult mvcResult = mockMvc.perform(
                 post("/api/auth/register")
@@ -249,7 +249,7 @@ class AuthenticationServiceApplicationTests {
                 .andExpect(status().isForbidden());
         });
 
-        verify(userRepository, times(1)).findByUsername(any(String.class));
+        verify(userRepository, times(1)).findByEmail(any(String.class));
     }
 
 }

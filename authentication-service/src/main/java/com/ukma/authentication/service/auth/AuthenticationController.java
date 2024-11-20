@@ -1,6 +1,7 @@
 package com.ukma.authentication.service.auth;
 
-import com.ukma.authentication.service.auth.dto.AuthDto;
+import com.ukma.authentication.service.auth.dto.LoginDto;
+import com.ukma.authentication.service.auth.dto.RegistrationDto;
 import com.ukma.authentication.service.auth.dto.TokenDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -20,20 +21,12 @@ public class AuthenticationController {
     AuthenticationServiceImpl authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody AuthDto authDto) {
-        try {
-            return ResponseEntity.ok(authenticationService.login(authDto));
-        } catch (Exception exception) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<TokenDto> login(@RequestBody LoginDto authDto) {
+        return ResponseEntity.ok(authenticationService.login(authDto));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<TokenDto> register(@RequestBody AuthDto authDto) {
-        try {
-            return ResponseEntity.ok(authenticationService.register(authDto));
-        } catch (Exception exception) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<TokenDto> register(@RequestBody RegistrationDto authDto) {
+        return ResponseEntity.ok(authenticationService.register(authDto));
     }
 }

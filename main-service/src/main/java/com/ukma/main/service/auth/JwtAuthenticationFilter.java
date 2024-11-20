@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             jwtAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
         } else {
-            throw new RuntimeException("user is not authorized");
+            throw new IllegalArgumentException("user is not authorized");
         }
 
         filterChain.doFilter(request, response);

@@ -12,12 +12,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BookDto {
+public class BookListFilterDto {
 
-    Long id;
-    String title;
-    String description;
-    String genre;
     String authorId;
-    String publicUrl;
+    String genre;
 }

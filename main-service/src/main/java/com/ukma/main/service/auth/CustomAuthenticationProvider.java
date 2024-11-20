@@ -16,7 +16,6 @@ public class CustomAuthenticationProvider extends AbstractUserDetailsAuthenticat
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-
     }
 
     @Override
