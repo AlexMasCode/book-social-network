@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String bearerPrefix = "Bearer ";
 
         if ((authHeader == null || authHeader.trim().isEmpty() || !authHeader.startsWith(bearerPrefix)) ||
-            request.getRequestURI().startsWith("/api/auth")) {
+            request.getRequestURI().startsWith("/api/auth") || request.getRequestURI().startsWith("/health")) {
             filterChain.doFilter(request, response);
             return;
         }

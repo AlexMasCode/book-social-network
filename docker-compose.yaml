@@ -10,8 +10,8 @@ services:
       SPRING_BOOT_ADMIN_URL: http://admin-server:8082
     healthcheck:
       test: "wget -T5 -qO- http://localhost:8761/health | grep UP || exit 1"
-      interval: 30s
-      retries: 8
+      interval: 10s
+      retries: 15
       start_period: 30s
       timeout: 10s
     ports:
@@ -29,8 +29,8 @@ services:
       ARTEMIS_CREATE_ARGS: "--force"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8161/console" ]
-      interval: 30s
-      retries: 8
+      interval: 10s
+      retries: 15
       start_period: 30s
       timeout: 10s
 
@@ -46,10 +46,10 @@ services:
     ports:
       - '8080:8080'
     healthcheck:
-      test: "wget -T5 -qO- http://localhost/health | grep UP || exit 1"
-      interval: 30s
-      retries: 8
-      start_period: 30s
+      test: "wget -T5 -qO- http://localhost:8080/health | grep UP || exit 1"
+      interval: 10s
+      retries: 15
+      start_period: 20s
       timeout: 10s
     depends_on:
       eureka-server:
@@ -61,13 +61,15 @@ services:
       dockerfile: Dockerfile
       args:
         JAR_FILE: ${MAIN_SERVICE_JAR}
+    ports:
+      - '8072:8072'
     environment:
       EUREKA_SERVER_URL: http://eureka-server:8761/eureka
       ARTEMIS_URL: tcp://artemis-broker:61616
       SPRING_BOOT_ADMIN_URL: http://admin-server:8082
     depends_on:
       authentication-service:
-        condition: service_started
+        condition: service_healthy
       artemis-broker:
         condition: service_healthy
 
@@ -77,20 +79,24 @@ services:
       dockerfile: Dockerfile
       args:
         JAR_FILE: ${AUTHENTICATION_SERVICE_JAR}
+    ports:
+      - '8074:8074'
     environment:
       EUREKA_SERVER_URL: http://eureka-server:8761/eureka
       SPRING_BOOT_ADMIN_URL: http://admin-server:8082
       ARTEMIS_URL: tcp://artemis-broker:61616
     depends_on:
+      admin-server:
+        condition: service_started
       api-gateway:
         condition: service_healthy
       artemis-broker:
         condition: service_healthy
     healthcheck:
-      test: "curl -f http://localhost/health"
-      interval: 30s
-      retries: 8
-      start_period: 30s
+      test: "wget -T5 -qO- http://localhost:8074/health | grep UP || exit 1"
+      interval: 10s
+      retries: 15
+      start_period: 20s
       timeout: 10s
 
   admin-server:
@@ -105,14 +111,8 @@ services:
     ports:
       - '8082:8082'
     depends_on:
-      api-gateway:
+      eureka-server:
         condition: service_healthy
-    healthcheck:
-      test: "wget -T5 -qO- http://localhost:8082/health | grep UP || exit 1"
-      interval: 30s
-      retries: 8
-      start_period: 30s
-      timeout: 10s
 
   prometheus:
     image: prom/prometheus:latest

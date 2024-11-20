@@ -1,29 +1,32 @@
 package com.ukma.authentication.service.user;
 
+import com.ukma.authentication.service.user.dto.UserDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class UserService {
+public class UserService{
 
     UserRepository userRepository;
 
-    public User findByUsername(String name) {
-        return userRepository.findByUsername(name).orElseThrow(() -> new UsernameNotFoundException("User is not found"));
+    public List<UserDto> findAll() {
+        return userRepository.findAll().stream()
+            .map(user -> new UserDto(user.getId(), user.getFullName(), user.getUsername()))
+            .toList();
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public User findByUsername(String username) {
+        return userRepository.findByEmail(username).orElseThrow();
     }
 
-    public void delete(String userId){
+    public void delete(String userId) {
         userRepository.deleteById(userId);
     }
 }

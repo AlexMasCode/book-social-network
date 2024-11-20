@@ -1,9 +1,9 @@
 server:
-  port: 0
+  port: 8074
 
 spring:
   artemis:
-    broker-url: ${ARTEMIS_URL:tcp://artemis-broker:61616}
+    broker-url: ${ARTEMIS_URL:tcp://localhost:61616}
     user: artemis
     password: artemis
   datasource:
@@ -25,6 +25,8 @@ eureka:
     service-url:
       defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka}
     enabled: true
+  instance:
+    prefer-ip-address: true
 
 management:
   endpoints:
