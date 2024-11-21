@@ -1,5 +1,6 @@
 package com.ukma.main.service.download.records;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ukma.main.service.book.Book;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +30,7 @@ public class DownloadRecord {
     Long id;
 
     @ManyToOne
+    @JsonBackReference
     Book book;
 
     @CreationTimestamp

@@ -8,7 +8,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 public class StatsServiceApplication {
 
-
     public static void main(String[] args) {
         SpringApplication.run(StatsServiceApplication.class, args);
     }

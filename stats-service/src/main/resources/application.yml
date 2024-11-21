@@ -1,9 +1,9 @@
 server:
-  port: 8072
+  port: 8068
 
 spring:
   application:
-    name: main-service
+    name: stats-service
   datasource:
     url: jdbc:h2:mem:mydb
     username: sa

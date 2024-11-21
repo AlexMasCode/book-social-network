@@ -1,6 +1,7 @@
 package com.ukma.main.service.book;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ukma.main.service.comments.Comment;
 import com.ukma.main.service.download.records.DownloadRecord;
 import jakarta.persistence.CascadeType;
@@ -42,5 +43,6 @@ public class Book {
     List<Comment> comments = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     List<DownloadRecord> downloadRecords = new ArrayList<>();
 }

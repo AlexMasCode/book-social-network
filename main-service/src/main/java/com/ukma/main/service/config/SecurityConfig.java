@@ -24,6 +24,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(requests ->
             requests
                 .requestMatchers("/health", "/prometheus").permitAll()
+                .anyRequest().permitAll()
             )
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .csrf(AbstractHttpConfigurer::disable)

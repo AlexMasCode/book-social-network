@@ -4,6 +4,7 @@ import com.ukma.main.service.book.dto.BookDto;
 import com.ukma.main.service.book.dto.BookListFilterDto;
 import com.ukma.main.service.book.dto.CreateBookDto;
 import com.ukma.main.service.download.records.DownloadRecord;
+import com.ukma.main.service.download.records.DownloadRecordRepository;
 import com.ukma.main.service.download.records.DownloadRecordService;
 import com.ukma.main.service.protobuf.GetUserRequest;
 import com.ukma.main.service.protobuf.UserResponse;
@@ -38,7 +39,7 @@ public class BookService {
 
     BookRepository bookRepository;
     CloudinaryService cloudinaryService;
-    DownloadRecordService downloadRecordService;
+    DownloadRecordRepository downloadRecordRepository;
 
     @GrpcClient("authentication-service")
     UserServiceGrpc.UserServiceBlockingStub userServiceBlockingStub;
@@ -83,7 +84,7 @@ public class BookService {
         DownloadRecord downloadRecord = new DownloadRecord();
         downloadRecord.setBook(book);
         downloadRecord.setUserId(jwtAuthenticationToken.getToken().getClaimAsString("userId"));
-        downloadRecordService.save(downloadRecord);
+        downloadRecordRepository.saveAndFlush(downloadRecord);
     }
 
     @Transactional

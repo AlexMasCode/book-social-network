@@ -9,6 +9,6 @@ import java.util.List;
 @FeignClient("main-service")
 public interface DownloadBookRecordClient {
 
-    @GetMapping("/{bookId}")
+    @GetMapping("/api/download-records/{bookId}")
     List<DownloadRecord> findAll(@PathVariable Long bookId);
 }

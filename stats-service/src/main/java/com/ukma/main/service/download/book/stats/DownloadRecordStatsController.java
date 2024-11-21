@@ -1,8 +1,7 @@
-package com.ukma.main.service.download.records;
+package com.ukma.main.service.download.book.stats;
 
-import com.ukma.main.service.download.records.dto.DownloadRecordDto;
+import com.ukma.main.service.download.book.stats.dto.DownloadBookStatsDto;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,15 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/download-records")
+@RequestMapping("/api/book-download-records-stats")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class DownloadRecordController {
+public class DownloadRecordStatsController {
 
-    DownloadRecordService downloadRecordService;
+    DownloadBookStatsService downloadBookStatsService;
 
     @GetMapping("/{bookId}")
-    public List<DownloadRecordDto> findAll(@PathVariable Long bookId) {
-        return downloadRecordService.findAll(bookId);
+    public List<DownloadBookStatsDto> countBookDownloadRecordsForLastSevenDays(@PathVariable Long bookId) {
+        return downloadBookStatsService.countBookDownloadRecordsForLastSevenDays(bookId);
     }
 }

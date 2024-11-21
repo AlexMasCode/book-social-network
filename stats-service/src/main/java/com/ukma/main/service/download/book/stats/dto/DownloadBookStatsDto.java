@@ -14,7 +14,6 @@ import lombok.experimental.FieldDefaults;
 @Setter
 public class DownloadBookStatsDto {
 
-    Integer dayNumber;
     String date;
     Integer downloadCount;
 }
