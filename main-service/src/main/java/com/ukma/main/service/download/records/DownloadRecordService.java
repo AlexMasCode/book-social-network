@@ -1,5 +1,6 @@
 package com.ukma.main.service.download.records;
 
+import com.ukma.main.service.book.BookService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DownloadRecordService {
 
+    BookService bookService;
     DownloadRecordRepository downloadRecordRepository;
 
     public void save(DownloadRecord downloadRecord) {
@@ -19,6 +21,7 @@ public class DownloadRecordService {
     }
 
     public List<DownloadRecord> findAll(Long bookId) {
+        bookService.getBook(bookId);
         return downloadRecordRepository.findAll((
             (root, query, cb) -> cb.equal(root.get("book").get("id"), bookId)
         ));

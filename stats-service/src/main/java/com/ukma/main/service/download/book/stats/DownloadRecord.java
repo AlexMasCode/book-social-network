@@ -1,14 +1,11 @@
-package com.ukma.main.service.download.records.dto;
+package com.ukma.main.service.download.book.stats;
 
-import com.ukma.main.service.book.Book;
-import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
@@ -17,7 +14,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Getter
 @Setter
-public class DownloadRecordDto {
+public class DownloadRecord {
 
     Long id;
     Long bookId;

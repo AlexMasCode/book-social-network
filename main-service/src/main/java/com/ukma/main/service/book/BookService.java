@@ -15,24 +15,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -47,6 +43,7 @@ public class BookService {
     @GrpcClient("authentication-service")
     UserServiceGrpc.UserServiceBlockingStub userServiceBlockingStub;
 
+    @Transactional
     public BookDto save(CreateBookDto createBookDto) throws IOException {
         if (getAuthorViaGrpc(createBookDto.getAuthorId()) == null) {
             throw new NoSuchElementException("author with such id does not exist");
@@ -63,10 +60,12 @@ public class BookService {
         return convertToDto(bookRepository.save(newBook));
     }
 
+    @Transactional(readOnly = true)
     public BookDto getBook(Long id) {
         return bookRepository.findById(id).map(this::convertToDto).orElseThrow();
     }
 
+    @Transactional
     public void downloadBook(Long id, HttpServletResponse servletResponse, JwtAuthenticationToken jwtAuthenticationToken) throws IOException {
         Book book = bookRepository.findById(id).orElseThrow();
         RestClient restClient = RestClient.create();
@@ -87,6 +86,7 @@ public class BookService {
         downloadRecordService.save(downloadRecord);
     }
 
+    @Transactional
     public List<BookDto> getAllBooks(BookListFilterDto bookListFilterDto) {
         return bookRepository.findAll(createFilter(bookListFilterDto))
             .stream()
@@ -94,7 +94,15 @@ public class BookService {
             .toList();
     }
 
+    @Transactional
     public void deleteOne(Long id) {
+        this.bookRepository.findById(id).ifPresent(book -> {
+            try {
+                cloudinaryService.remove(book.getPublicUrl(), "books");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         bookRepository.deleteById(id);
     }
 
