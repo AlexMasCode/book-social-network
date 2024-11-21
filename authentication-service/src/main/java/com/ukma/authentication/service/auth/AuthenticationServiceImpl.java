@@ -26,7 +26,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public TokenDto login(LoginDto authDto) {
         User userCheck = userRepository.findByEmail(authDto.getEmail()).orElse(null);
         if (userCheck != null && passwordEncoder.matches(authDto.getPassword(), userCheck.getPassword())) {
-            return new TokenDto(jwtService.generateToken(Map.of(), userCheck.getUsername()));
+            return new TokenDto(jwtService.generateToken(Map.of("userId", userCheck.getId()), userCheck.getUsername()));
         }
         throw new IllegalArgumentException("user is not found");
     }
@@ -36,7 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (userCheck.isEmpty()) {
             User newUser = new User(authDto.getEmail(), authDto.getFullName(), passwordEncoder.encode(authDto.getPassword()));
             userRepository.save(newUser);
-            return new TokenDto(jwtService.generateToken(Map.of(), newUser.getUsername()));
+            return new TokenDto(jwtService.generateToken(Map.of("userId", newUser.getId()), newUser.getUsername()));
         } else {
             throw new IllegalArgumentException("user is already exists");
         }

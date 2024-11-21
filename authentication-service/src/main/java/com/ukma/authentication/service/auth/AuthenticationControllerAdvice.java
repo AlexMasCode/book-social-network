@@ -16,6 +16,7 @@ public class AuthenticationControllerAdvice {
     public ResponseEntity<ExceptionDto> handleIllegalArgumentException(IllegalArgumentException exception) {
         return ResponseEntity.badRequest().body(
             ExceptionDto.builder()
+                .message(exception.getMessage())
                 .exceptionClass(exception.getClass().getName())
                 .build()
         );

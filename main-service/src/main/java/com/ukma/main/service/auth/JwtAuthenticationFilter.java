@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             jwtService.getClaim(token, Claims::getIssuedAt).toInstant(),
             jwtService.getClaim(token, Claims::getExpiration).toInstant(),
             Map.of("header", "Header"),
-            Map.of("claim", "Claim")
+            Map.of("userId", jwtService.getClaim(token, claims -> claims.get("userId")))
         );
     }
 }

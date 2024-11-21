@@ -2,6 +2,7 @@ package com.ukma.main.service.book;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ukma.main.service.comments.Comment;
+import com.ukma.main.service.download.records.DownloadRecord;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,7 +13,9 @@ import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.ArrayList;
@@ -22,7 +25,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Book {
 
     @Id
@@ -34,7 +38,9 @@ public class Book {
     String authorId;
     String publicUrl;
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<DownloadRecord> downloadRecords = new ArrayList<>();
 }

@@ -1,7 +1,6 @@
 package com.ukma.main.service.config;
 
 import com.cloudinary.Cloudinary;
-import com.ukma.main.service.auth.CustomAuthenticationProvider;
 import com.ukma.main.service.protobuf.UserServiceGrpc;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
@@ -9,13 +8,11 @@ import io.grpc.ManagedChannelBuilder;
 import net.devh.boot.grpc.client.security.CallCredentialsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -31,11 +28,6 @@ public class ApplicationConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        return new CustomAuthenticationProvider();
     }
 
     @Bean
