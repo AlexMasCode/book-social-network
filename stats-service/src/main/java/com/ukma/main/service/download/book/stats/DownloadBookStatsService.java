@@ -24,9 +24,9 @@ public class DownloadBookStatsService {
     public List<DownloadBookStatsDto> countBookDownloadRecordsForLastSevenDays(Long bookId) {
         List<DownloadRecord> downloadRecords = downloadBookRecordClient.findAll(bookId);
         List<DownloadBookStatsDto> resultList = new ArrayList<>();
-        int dayCount = 6;
+        int dayCount = 7;
 
-        while (dayCount-- >= 0) {
+        while (dayCount-- > 0) {
             Instant requiredDate = Instant.now().minus(Duration.of(dayCount, ChronoUnit.DAYS)).truncatedTo(ChronoUnit.DAYS);
             long downloadCount = downloadRecords.stream()
                 .filter(record -> record.getDownloadTime().truncatedTo(ChronoUnit.DAYS).equals(requiredDate))
