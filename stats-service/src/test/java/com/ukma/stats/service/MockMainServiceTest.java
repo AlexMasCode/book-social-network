@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(properties = {"eureka.client.enabled=false",
         "spring.profiles.active=test",
-        "spring.cloud.openfeign.client.config.main-service.url=http://localhost:8072"})
+        "spring.cloud.openfeign.client.config.main-service.url=http://localhost:8089"})
 
 @Import(ClockTestConfiguration.class)
 class MockMainServiceTest {
@@ -38,7 +38,7 @@ class MockMainServiceTest {
 
     @BeforeAll
     static void setUpWireMock() {
-        wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8072));
+        wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8089));
         wireMockServer.start();
 
         //звичайний запит
