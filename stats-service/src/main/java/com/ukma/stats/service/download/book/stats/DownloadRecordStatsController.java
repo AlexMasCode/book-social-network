@@ -27,7 +27,7 @@ import java.util.List;
 public class DownloadRecordStatsController {
 
     DownloadBookStatsService downloadBookStatsService;
-    com.ukma.main.service.download.book.stats.ExcelDownloadBookStatsService excelDownloadBookStatsService;
+    ExcelDownloadBookStatsService excelDownloadBookStatsService;
 
     @GetMapping("/{bookId}")
     public List<DownloadBookStatsDto> countBookDownloadRecordsForLastSevenDays(@PathVariable Long bookId) {
