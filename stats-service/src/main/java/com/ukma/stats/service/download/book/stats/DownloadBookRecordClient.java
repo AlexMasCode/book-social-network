@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(value = "main-service")
+@FeignClient("main-service")
 public interface DownloadBookRecordClient {
 
     @GetMapping("/api/download-records/{bookId}")
