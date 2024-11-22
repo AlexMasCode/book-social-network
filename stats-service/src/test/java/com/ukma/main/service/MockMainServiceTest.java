@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 
 import java.util.List;
@@ -17,7 +18,9 @@ import java.util.List;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(properties = {"eureka.client.enabled=false"})
+@SpringBootTest(properties = {"eureka.client.enabled=false",
+        "spring.profiles.active=test",
+        "spring.cloud.openfeign.client.config.main-service.url=http://localhost:8072"})
 class MockMainServiceTest {
     @Autowired
     private DownloadBookRecordClient downloadBookRecordClient;

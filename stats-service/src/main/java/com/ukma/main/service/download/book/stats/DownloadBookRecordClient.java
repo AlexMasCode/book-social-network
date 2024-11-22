@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(value = "main-service", url = "http://localhost:8072")
+@FeignClient(value = "main-service")
 public interface DownloadBookRecordClient {
 
     @GetMapping("/api/download-records/{bookId}")
