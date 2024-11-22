@@ -2,6 +2,8 @@ server:
   port: 8068
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: stats-service
   datasource:

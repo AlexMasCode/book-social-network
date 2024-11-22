@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(properties = {"eureka.client.enabled=false",
         "spring.profiles.active=test",
         "spring.cloud.openfeign.client.config.main-service.url=http://localhost:8072"})
+
 @Import(ClockTestConfiguration.class)
 class MockMainServiceTest {
     @Autowired
