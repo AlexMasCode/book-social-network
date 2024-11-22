@@ -1,9 +1,7 @@
 package com.ukma.main.service;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.ukma.main.service.download.book.stats.DownloadBookRecordClient;
 import com.ukma.main.service.download.book.stats.DownloadRecord;
 import feign.FeignException;
@@ -18,7 +16,6 @@ import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.COLLECTION;
 
 @SpringBootTest(properties = {"eureka.client.enabled=false"})
 class MockMainServiceTest {
