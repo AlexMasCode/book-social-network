@@ -1,6 +1,5 @@
-package com.ukma.main.service.download.records;
+package com.ukma.main.service.review;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ukma.main.service.book.Book;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,9 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.Instant;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -24,18 +20,18 @@ import java.time.Instant;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DownloadRecord {
+public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
-    Book book;
+    String title;
 
-    @CreationTimestamp
-    Instant downloadTime;
+    String content;
 
     String userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    Book book;
 }
