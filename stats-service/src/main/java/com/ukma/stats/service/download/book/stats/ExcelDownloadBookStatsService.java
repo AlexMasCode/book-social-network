@@ -1,4 +1,4 @@
-package com.ukma.main.service.download.book.stats;
+package com.ukma.stats.service.download.book.stats;
 
 import com.ukma.main.service.download.book.stats.dto.DownloadBookStatsDto;
 import lombok.AccessLevel;

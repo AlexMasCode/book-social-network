@@ -1,4 +1,4 @@
-package com.ukma.main.service.download.book.stats;
+package com.ukma.stats.service.download.book.stats;
 
 import com.ukma.main.service.download.book.stats.dto.DownloadBookStatsDto;
 import lombok.AccessLevel;
@@ -22,7 +22,7 @@ public class DownloadBookStatsService {
     DownloadBookRecordClient downloadBookRecordClient;
 
     public List<DownloadBookStatsDto> countBookDownloadRecordsForLastSevenDays(Long bookId) {
-        List<DownloadRecord> downloadRecords = downloadBookRecordClient.findAll(bookId);
+        List<com.ukma.main.service.download.book.stats.DownloadRecord> downloadRecords = downloadBookRecordClient.findAll(bookId);
         List<DownloadBookStatsDto> resultList = new ArrayList<>();
         int dayCount = 7;
 
