@@ -22,6 +22,7 @@
         <module>main-service</module>
         <module>admin-service</module>
         <module>stats-service</module>
+        <module>notification-service</module>
     </modules>
 
     <properties>

@@ -116,6 +116,24 @@ services:
       artemis-broker:
         condition: service_healthy
 
+  notification-service:
+    container_name: book-notification-service
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: ${NOTIFICATION_SERVICE_JAR}
+    ports:
+      - '8060:8060'
+    environment:
+      EUREKA_SERVER_URL: http://eureka-server:8761/eureka
+      SPRING_BOOT_ADMIN_URL: http://admin-server:8082
+      ARTEMIS_URL: tcp://artemis-broker:61616
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+      artemis-broker:
+        condition: service_healthy
+
   admin-server:
     container_name: book-admin-server
     build:

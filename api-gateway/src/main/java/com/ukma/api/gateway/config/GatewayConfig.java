@@ -12,7 +12,7 @@ public class GatewayConfig {
         return builder.routes()
             .route(p -> p.path("/api/users/**", "/api/auth/**")
                 .uri("lb://authentication-service"))
-            .route(p -> p.path("/api/books/**", "/api/comments/**", "/api/comment-complaints/**", "/api/download-records/**")
+            .route(p -> p.path("/api/books/**", "/api/comments/**", "/api/comment-complaints/**", "/api/download-records/**", "/api/reviews/**")
                 .uri("lb://main-service"))
             .route(p -> p.path("/actuator/auth-metrics/**")
                 .filters(f -> f.rewritePath("/authentication-service/(?<remaining>.*)", "/prometheus/${remaining}"))

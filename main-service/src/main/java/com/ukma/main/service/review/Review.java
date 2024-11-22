@@ -16,7 +16,6 @@ import lombok.experimental.FieldDefaults;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -30,8 +29,15 @@ public class Review {
 
     String content;
 
-    String userId;
+    String authorId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     Book book;
+
+    public Review(String title, String content, String authorId, Book book) {
+        this.title = title;
+        this.content = content;
+        this.authorId = authorId;
+        this.book = book;
+    }
 }

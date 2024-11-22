@@ -23,9 +23,6 @@ public class CreateReviewDto {
     @NotBlank
     String content;
 
-    @NotBlank
-    String userId;
-
     @NotNull
     Long bookId;
 }
