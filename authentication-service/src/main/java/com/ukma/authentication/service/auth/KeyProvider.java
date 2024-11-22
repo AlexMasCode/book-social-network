@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -28,7 +29,7 @@ public class KeyProvider {
     KeyFactory keyFactory;
 
     @Autowired
-    public KeyProvider(ResourceLoader resourceLoader) throws Exception {
+    public KeyProvider(ResourceLoader resourceLoader) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
         this.resourceLoader = resourceLoader;
         this.keyFactory = KeyFactory.getInstance("RSA");
         this.privateKey = loadPrivateKey();

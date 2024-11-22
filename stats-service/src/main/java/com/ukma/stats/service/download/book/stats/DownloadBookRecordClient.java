@@ -10,5 +10,5 @@ import java.util.List;
 public interface DownloadBookRecordClient {
 
     @GetMapping("/api/download-records/{bookId}")
-    List<com.ukma.main.service.download.book.stats.DownloadRecord> findAll(@PathVariable Long bookId);
+    List<DownloadRecord> findAll(@PathVariable Long bookId);
 }

@@ -1,6 +1,6 @@
 package com.ukma.stats.service.download.book.stats;
 
-import com.ukma.main.service.download.book.stats.dto.DownloadBookStatsDto;
+import com.ukma.stats.service.download.book.stats.dto.DownloadBookStatsDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
