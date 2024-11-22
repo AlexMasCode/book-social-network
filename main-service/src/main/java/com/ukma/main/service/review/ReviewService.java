@@ -43,7 +43,7 @@ public class ReviewService {
         ReviewMailMessageDto messageDto = ReviewMailMessageDto
             .builder()
             .title("New review on your book!")
-            .content("Hello! User %s left review on your book!")
+            .content("Hello! User '%s' left review on your book '%s'!".formatted(bookAuthor.getName(), book.getTitle()))
             .reviewId(newReview.getId())
             .receiver(bookAuthor.getName())
             .build();

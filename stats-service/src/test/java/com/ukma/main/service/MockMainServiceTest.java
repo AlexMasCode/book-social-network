@@ -2,7 +2,7 @@ package com.ukma.main.service;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.ukma.main.service.download.book.stats.DownloadBookRecordClient;
+import com.ukma.stats.service.download.book.stats.DownloadBookRecordClient;
 import com.ukma.main.service.download.book.stats.DownloadRecord;
 import feign.FeignException;
 import org.junit.jupiter.api.AfterAll;
